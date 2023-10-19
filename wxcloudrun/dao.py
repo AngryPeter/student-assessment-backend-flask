@@ -124,20 +124,20 @@ def update_user(user):
         logger.info("update_user errorMsg= {} ".format(e))
 
 
-def delete_user(phone):
+def delete_user(user):
     """
     根据 phone 删除 User 实体
     :param id: phone
     """
     try:
-        have_user = query_user_byphone(phone)
+        have_user = query_user_byphone(user.phone)
         if have_user is None:
             return
         else:
             old_time = have_user.time
             old_date = have_user.date
             Experiment.query.filter(Experiment.time == old_time, Experiment.date == old_date).update({'left_number': Experiment.left_number + 1})
-            db.session.query(Users).filter(Users.phone == phone).delete()
+            db.session.query(Users).filter(Users.phone == user.phone, Users.username == user.username).delete()
             db.session.flush()
             db.session.commit()
     except OperationalError as e:
