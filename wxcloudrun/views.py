@@ -5,10 +5,7 @@ from wxcloudrun.dao import delete_counterbyid, query_counterbyid, insert_counter
 from wxcloudrun.dao import query_experiment, insert_user, update_user, query_user_byphone, delete_user
 from wxcloudrun.model import Counters, Experiment, Users
 from wxcloudrun.response import make_succ_empty_response, make_succ_response, make_err_response, make_nouser_response
-import logging
 
-# 初始化日志
-logger = logging.getLogger('log')
 
 @app.route('/')
 def index():
@@ -73,16 +70,11 @@ def get_count():
 # 管理员后端路由
 @app.route('/user', methods=['GET'])
 def experiment_info_list():
-    logger.info("get")
     info = query_experiment()
-    logger.info("get1")
-    logger.info(str(info))
     final_info = []
-    logger.info("get2")
     for exp in info:
         if exp.left_number > 0:
-            final_info.append([exp.date, exp.time])
-    logger.info(str(final_info))
+            final_info.append([str(exp.date), exp.time])
     return make_succ_response(final_info)
 
 # 管理员后端路由
@@ -93,7 +85,7 @@ def user_action():
         user = Users()
         user.username = params['name']
         user.phone = params['phone']
-        user.date = params['date']
+        user.date = datetime.strptime(params['date'], '%y-%m-%d').date()
         user.time = params['time']
         insert_user(user)
         return make_succ_empty_response()
@@ -101,7 +93,7 @@ def user_action():
         user = Users()
         user.username = params['name']
         user.phone = params['phone']
-        user.date = params['date']
+        user.date = datetime.strptime(params['date'], '%y-%m-%d').date()
         user.time = params['time']
         update_user(user)
         return make_succ_empty_response()
@@ -113,14 +105,14 @@ def user_action():
             info = []
             info.append(user.username)
             info.append(user.phone)
-            info.append(user.date)
+            info.append(str(user.date))
             info.append(user.time)
             return make_succ_response(info)
     elif params['type'] == 'delete':
         user = Users()
         user.username = params['name']
         user.phone = params['phone']
-        user.date = params['date']
+        user.date = datetime.strptime(params['date'], '%y-%m-%d').date()
         user.time = params['time']
         delete_user(user)
         return make_succ_empty_response()
