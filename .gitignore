@@ -4,3 +4,4 @@ docker-compose.yml
 Dockerfile.development
 .DS_Store
 wxcloudrun/.DS_Store
+container.config.json

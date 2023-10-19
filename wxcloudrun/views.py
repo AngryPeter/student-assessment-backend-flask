@@ -2,10 +2,10 @@ from datetime import datetime
 from flask import render_template, request
 from run import app
 from wxcloudrun.dao import delete_counterbyid, query_counterbyid, insert_counter, update_counterbyid
-from wxcloudrun.dao import query_experiment, insert_experiment
+from wxcloudrun.dao import query_experiment, insert_user, update_user, query_user_byphone, delete_user
 from wxcloudrun.model import Counters, Experiment, Users
-from wxcloudrun.response import make_succ_empty_response, make_succ_response, make_err_response
-
+from wxcloudrun.response import make_succ_empty_response, make_succ_response, make_err_response, make_nouser_response
+import json
 
 @app.route('/')
 def index():
@@ -68,20 +68,53 @@ def get_count():
 
 
 # 管理员后端路由
-@app.route('/manager', methods=['GET'])
+@app.route('/user', methods=['GET'])
 def experiment_info_list():
-    # today = datetime.date.today()
-    # data = [
-    #     ['时间段', '人数限制', '剩余名额数'],
-    # ]
-    # info = query_experiment()
-    # print(info)
-    experiment = Experiment()
-    experiment.start_date = '10.16'
-    experiment.end_date = '10.15'
-    experiment.time = '15:00-16:00'
-    experiment.number = 2
-    experiment.left_number = 1
-    insert_experiment(experiment)
     info = query_experiment()
-    return make_succ_response(info)
+    final_info = []
+    for exp in info:
+        if exp.left_number > 0:
+            final_info.append(exp.time)
+    return make_succ_response(final_info)
+
+# 管理员后端路由
+@app.route('/user', methods=['POST'])
+def user_action():
+    params = json.loads(request.form.to_dict()['data'])
+    if params['type'] == 'sign':    # 报名
+        user = Users()
+        user.username = params['name']
+        user.phone = params['phone']
+        user.date = params['date']
+        user.time = params['time']
+        insert_user(user)
+        return make_succ_empty_response()
+    elif params['type'] == 'modify':    # 修改报名时间
+        user = Users()
+        user.username = params['name']
+        user.phone = params['phone']
+        user.date = params['date']
+        user.time = params['time']
+        update_user(user)
+        return make_succ_empty_response()
+    elif params['type'] == 'select':
+        user = query_user_byphone(params['phone'])
+        if user is None:
+            return make_nouser_response()
+        else:
+            info = []
+            info.append(user.name)
+            info.append(user.phone)
+            info.append(user.date)
+            info.append(user.time)
+            return make_succ_response(info)
+    elif params['type'] == 'delete':
+        user = Users()
+        user.username = params['name']
+        user.phone = params['phone']
+        user.date = params['date']
+        user.time = params['time']
+        delete_user(user)
+        return make_succ_empty_response()
+    else:
+        return make_err_response('type参数错误')

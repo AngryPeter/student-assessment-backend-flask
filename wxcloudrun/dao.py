@@ -63,16 +63,16 @@ def update_counterbyid(counter):
     except OperationalError as e:
         logger.info("update_counterbyid errorMsg= {} ".format(e))
 
-def query_exp_bytime(time):
+def query_user_byphone(phone):
     """
-    根据ID查询 Experiment 实体
-    :param id: Experiment 时间段
-    :return: Experiment 实体
+    根据ID查询 User 实体
+    :param id: User 时间段
+    :return: User 实体
     """
     try:
-        return Experiment.query.filter(Experiment.time == time).first()
+        return Users.query.filter(Users.phone == phone).first()
     except OperationalError as e:
-        logger.info("query_exp_bytime errorMsg= {} ".format(e))
+        logger.info("query_user_byphone errorMsg= {} ".format(e))
         return None
     
 
@@ -90,18 +90,6 @@ def insert_user(user):
         logger.info("insert_user errorMsg= {} ".format(e))
 
 
-def insert_experiment(experiment):
-    """
-    插入一个 Experiment 配置信息
-    :param counter: Counters实体
-    """
-    try:
-        db.session.add(experiment)
-        db.session.commit()
-    except OperationalError as e:
-        logger.info("insert_experiment errorMsg= {} ".format(e))
-
-
 def query_experiment():
     """
     查询全部 Experiment 配置信息
@@ -111,3 +99,43 @@ def query_experiment():
     except OperationalError as e:
         logger.info("query_experiment errorMsg= {} ".format(e))
         return None
+    
+
+def update_user(user):
+    """
+    根据 phone 更新 user 时间的值
+    :param user 实体
+    """
+    try:
+        have_user = query_user_byphone(user.phone)
+        if have_user is None:
+            return
+        else:
+            old_time = have_user.time
+            new_time = user.time
+            Experiment.query.filter(Experiment.time == old_time).update({'left_number': Experiment.left_number + 1})
+            Experiment.query.filter(Experiment.time == new_time).update({'left_number': Experiment.left_number - 1})
+            Users.query.filter(Users.phone == user.phone).update({'time': new_time})
+            db.session.flush()
+            db.session.commit()
+    except OperationalError as e:
+        logger.info("update_user errorMsg= {} ".format(e))
+
+
+def delete_user(phone):
+    """
+    根据 phone 删除 User 实体
+    :param id: phone
+    """
+    try:
+        have_user = query_user_byphone(phone)
+        if have_user is None:
+            return
+        else:
+            old_time = have_user.time
+            Experiment.query.filter(Experiment.time == old_time).update({'left_number': Experiment.left_number + 1})
+            db.session.delete(have_user)
+            db.session.flush()
+            db.session.commit()
+    except OperationalError as e:
+        logger.info("delete_user errorMsg= {} ".format(e))
