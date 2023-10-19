@@ -103,7 +103,7 @@ def user_action():
             return make_nouser_response()
         else:
             info = []
-            info.append(user.name)
+            info.append(user.username)
             info.append(user.phone)
             info.append(user.date)
             info.append(user.time)
