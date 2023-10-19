@@ -74,7 +74,7 @@ def experiment_info_list():
     final_info = []
     for exp in info:
         if exp.left_number > 0:
-            final_info.append(exp.time)
+            final_info.append([exp.date, exp.time])
     return make_succ_response(final_info)
 
 # 管理员后端路由
