@@ -20,7 +20,8 @@
 			"PolicyThreshold": 60
 		}
 	],
-	"envParams": {},         
+	"envParams": {
+	},         
 	"customLogs": "stdout",              
 	"initialDelaySeconds": 2,                  
 	"dataBaseName":"flask_demo",

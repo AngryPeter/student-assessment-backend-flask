@@ -111,15 +111,3 @@ def query_experiment():
     except OperationalError as e:
         logger.info("query_experiment errorMsg= {} ".format(e))
         return None
-    
-
-def insert_experiment(experiment):
-    """
-    插入一个 Experiment 实体
-    :param experiment: Experiment实体
-    """
-    try:
-        db.session.add(experiment)
-        db.session.commit()
-    except OperationalError as e:
-        logger.info("insert_experiment errorMsg= {} ".format(e))

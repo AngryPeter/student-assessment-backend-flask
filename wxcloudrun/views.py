@@ -79,10 +79,9 @@ def experiment_info_list():
     experiment = Experiment()
     experiment.start_date = '10.16'
     experiment.end_date = '10.15'
-    experiment.time = '13:00-14:00'
+    experiment.time = '15:00-16:00'
     experiment.number = 2
     experiment.left_number = 1
     insert_experiment(experiment)
     info = query_experiment()
-    print(info)
-    return make_succ_empty_response()
+    return make_succ_response(info)
