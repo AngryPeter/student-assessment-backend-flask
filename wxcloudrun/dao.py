@@ -84,7 +84,7 @@ def insert_user(user):
     try:
         db.session.add(user)
         Experiment.query.filter(Experiment.time == user.time, Experiment.date == user.date).update({'left_number': Experiment.left_number - 1})
-        # db.session.flush()
+        db.session.flush()
         db.session.commit()
     except OperationalError as e:
         logger.info("insert_user errorMsg= {} ".format(e))
@@ -130,14 +130,14 @@ def delete_user(phone):
     :param id: phone
     """
     try:
-        have_user = Users.query.get(phone)
+        have_user = query_user_byphone(phone)
         if have_user is None:
             return
         else:
             old_time = have_user.time
             old_date = have_user.date
             Experiment.query.filter(Experiment.time == old_time, Experiment.date == old_date).update({'left_number': Experiment.left_number + 1})
-            db.session.delete(have_user)
+            db.session.query(Users).filter(Users.phone == phone).delete()
             db.session.flush()
             db.session.commit()
     except OperationalError as e:

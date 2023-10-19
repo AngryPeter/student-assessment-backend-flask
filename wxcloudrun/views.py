@@ -86,7 +86,6 @@ def user_action():
         user.username = params['name']
         user.phone = params['phone']
         user.date = datetime.strptime(params['date'], '%Y-%m-%d').date()
-        
         user.time = params['time']
         insert_user(user)
         return make_succ_empty_response()
