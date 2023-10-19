@@ -5,7 +5,10 @@ from wxcloudrun.dao import delete_counterbyid, query_counterbyid, insert_counter
 from wxcloudrun.dao import query_experiment, insert_user, update_user, query_user_byphone, delete_user
 from wxcloudrun.model import Counters, Experiment, Users
 from wxcloudrun.response import make_succ_empty_response, make_succ_response, make_err_response, make_nouser_response
-import json
+import logging
+
+# 初始化日志
+logger = logging.getLogger('log')
 
 @app.route('/')
 def index():
@@ -70,11 +73,16 @@ def get_count():
 # 管理员后端路由
 @app.route('/user', methods=['GET'])
 def experiment_info_list():
+    logger.info("get")
     info = query_experiment()
+    logger.info("get1")
+    logger.info(str(info))
     final_info = []
+    logger.info("get2")
     for exp in info:
         if exp.left_number > 0:
             final_info.append([exp.date, exp.time])
+    logger.info(str(final_info))
     return make_succ_response(final_info)
 
 # 管理员后端路由
