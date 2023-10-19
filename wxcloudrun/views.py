@@ -80,7 +80,7 @@ def experiment_info_list():
 # 管理员后端路由
 @app.route('/user', methods=['POST'])
 def user_action():
-    params = json.loads(request.form.to_dict()['data'])
+    params = request.get_json()
     if params['type'] == 'sign':    # 报名
         user = Users()
         user.username = params['name']
