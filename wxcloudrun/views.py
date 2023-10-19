@@ -113,8 +113,6 @@ def user_action():
         user = Users()
         user.username = params['name']
         user.phone = params['phone']
-        user.date = datetime.strptime(params['date'], '%Y-%m-%d').date()
-        user.time = params['time']
         delete_user(user)
         return make_succ_empty_response()
     else:

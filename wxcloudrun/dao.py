@@ -117,7 +117,7 @@ def update_user(user):
             new_date = user.date
             Experiment.query.filter(Experiment.time == old_time, Experiment.date == old_date).update({'left_number': Experiment.left_number + 1})
             Experiment.query.filter(Experiment.time == new_time, Experiment.date == new_date).update({'left_number': Experiment.left_number - 1})
-            Users.query.filter(Users.phone == user.phone).update({'time': new_time})
+            Users.query.filter(Users.phone == user.phone).update({'time': new_time, 'date': new_date})
             db.session.flush()
             db.session.commit()
     except OperationalError as e:
@@ -130,7 +130,7 @@ def delete_user(phone):
     :param id: phone
     """
     try:
-        have_user = query_user_byphone(phone)
+        have_user = Users.query.get(phone)
         if have_user is None:
             return
         else:
