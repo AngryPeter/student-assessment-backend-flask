@@ -83,7 +83,6 @@ def insert_user(user):
     """
     try:
         db.session.add(user)
-        Experiment.query.filter(Experiment.time == user.time, Experiment.date == user.date).update({'left_number': Experiment.left_number - 1})
         db.session.flush()
         db.session.commit()
     except OperationalError as e:
@@ -111,13 +110,7 @@ def update_user(user):
         if have_user is None:
             return
         else:
-            old_time = have_user.time
-            new_time = user.time
-            old_date = have_user.date
-            new_date = user.date
-            Experiment.query.filter(Experiment.time == old_time, Experiment.date == old_date).update({'left_number': Experiment.left_number + 1})
-            Experiment.query.filter(Experiment.time == new_time, Experiment.date == new_date).update({'left_number': Experiment.left_number - 1})
-            Users.query.filter(Users.phone == user.phone).update({'time': new_time, 'date': new_date})
+            Users.query.filter(Users.phone == user.phone).update({'time': user.time, 'date': user.date})
             db.session.flush()
             db.session.commit()
     except OperationalError as e:
@@ -134,9 +127,6 @@ def delete_user(user):
         if have_user is None:
             return
         else:
-            old_time = have_user.time
-            old_date = have_user.date
-            Experiment.query.filter(Experiment.time == old_time, Experiment.date == old_date).update({'left_number': Experiment.left_number + 1})
             db.session.query(Users).filter(Users.phone == user.phone, Users.username == user.username).delete()
             db.session.flush()
             db.session.commit()

@@ -18,7 +18,7 @@ class Counters(db.Model):
 # 用户信息表
 class Users(db.Model):
     # 设置结构体表格名称
-    __tablename__ = 'Users'
+    __tablename__ = 'Students'
 
     # 设定结构体对应表格的字段
     username = db.Column(db.Text)
