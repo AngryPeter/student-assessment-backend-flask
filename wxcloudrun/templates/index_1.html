@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+{% autoescape false %}
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <title>管理员平台</title>
+  </head>
+
+  <body>
+    <!-- Header -->
+    <header>
+      <h1>管理员平台</h1>
+    </header>
+    <div style="float:left;width:33%">
+      {% if not have_info %}
+        <h2>目前无配置信息！</h2>
+      {% else %}
+        <h2>当前配置信息</h2>
+        <div>
+          <p>起始日期：{{ start_date }}</p>
+          <p>截止日期：{{ end_date }}</p>
+        </div>
+        <div id="table-container">
+          <!--当前配置信息展示  -->
+          <script type="text/javascript">
+            var tableData = {{experiment_data}};
+            var tableHTML = '<table class="pure-table">';
+            for (var i = 0; i < tableData.length; i++) {
+              tableHTML += '<tr>';
+              for (var j = 0; j < tableData[i].length; j++) {
+                tableHTML += '<td>' + tableData[i][j] + '</td>';
+              }
+              tableHTML += '</tr>';
+            }
+            tableHTML += '</table>';
+            document.getElementById('table-container').innerHTML = tableHTML;
+          </script>
+        </div>
+      {% endif %}
+    </div>
+    <div style="float:left;width:33%">
+      <h2>添加新配置</h2>
+      <div id="input-container">
+        <form action="/manager" method="POST">
+          {% if not have_info %}
+          <div>
+            <p>起始日期</p>
+            <input type="date" id="start" name="start_date" value={{today}} min={{today}} max="2098-12-31" required />
+          </div>
+          <div>
+            <p>终止日期</p>
+            <input type="date" id="start" name="end_date" value={{today}} min={{today}} max="2098-12-31" required />
+          </div>
+          {% else %}
+          <div>
+            <p>起始日期</p>
+            <input type="date" id="start" name="start_date" value= {{start_date}} min={{today}} max="2098-12-31" />
+          </div>
+          <div>
+            <p>终止日期</p>
+            <input type="date" id="start" name="end_date" value= {{end_date}} min={{today}} max="2098-12-31" />
+          </div>
+          {% endif %}
+          <div>
+            <h4>添加新时间段</h4>
+            <p>起始时间</p>
+            <input type="time" id="start_time" name="start_time" min="00:00" max="24:00" required /></br>
+            <p>终止时间</p>
+            <input type="time" id="end_time" name="end_time" min="00:00" max="24:00" required /></br>
+          </div>
+          <div>
+            <p>设置最大人数</p>
+            <input type="number" id="number" name="number" min="1" max="100000" required />        
+          </div>
+          <div>
+            <p></p>
+            <input type="submit" value="添加配置" />
+          </div>
+        </form>
+      </div>
+    </div>
+    <div style="float:left;width:33%">
+      <h2>名单导出</h2>
+      <form action="/manager/download" method="GET">
+        <input type="submit" value="下载当前实验名单" />
+      </form>
+    </div>
+  </body>
+</html>
+
+
+<style type="text/css">
+  html {
+      font-family: sans-serif;
+      -ms-text-size-adjust: 100%;
+      -webkit-text-size-adjust: 100%;
+  }
+   
+  body {
+      margin: 10px;
+  }
+  table {
+      border-collapse: collapse;
+      border-spacing: 0;
+  }
+   
+  td,th {
+      padding: 0;
+  }
+   
+  .pure-table {
+      border-collapse: collapse;
+      border-spacing: 0;
+      empty-cells: show;
+      border: 1px solid #cbcbcb;
+  }
+   
+  .pure-table caption {
+      color: #000;
+      font: italic 85%/1 arial,sans-serif;
+      padding: 1em 0;
+      text-align: center;
+  }
+   
+  .pure-table td,.pure-table th {
+      border-left: 1px solid #cbcbcb;
+      border-width: 0 0 0 1px;
+      font-size: inherit;
+      margin: 0;
+      overflow: visible;
+      padding: .5em 1em;
+  }
+   
+  .pure-table thead {
+      background-color: #e0e0e0;
+      color: #000;
+      text-align: left;
+      vertical-align: bottom;
+  }
+   
+  .pure-table td {
+      background-color: transparent;
+  }
+  </style>
+{% endautoescape %}

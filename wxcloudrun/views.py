@@ -2,7 +2,8 @@ from datetime import datetime
 from flask import render_template, request
 from run import app
 from wxcloudrun.dao import delete_counterbyid, query_counterbyid, insert_counter, update_counterbyid
-from wxcloudrun.model import Counters
+from wxcloudrun.dao import query_experiment, insert_experiment
+from wxcloudrun.model import Counters, Experiment, Users
 from wxcloudrun.response import make_succ_empty_response, make_succ_response, make_err_response
 
 
@@ -64,3 +65,24 @@ def get_count():
     """
     counter = Counters.query.filter(Counters.id == 1).first()
     return make_succ_response(0) if counter is None else make_succ_response(counter.count)
+
+
+# 管理员后端路由
+@app.route('/manager', methods=['GET'])
+def experiment_info_list():
+    # today = datetime.date.today()
+    # data = [
+    #     ['时间段', '人数限制', '剩余名额数'],
+    # ]
+    # info = query_experiment()
+    # print(info)
+    experiment = Experiment()
+    experiment.start_date = '10.16'
+    experiment.end_date = '10.15'
+    experiment.time = '13:00-14:00'
+    experiment.number = 2
+    experiment.left_number = 1
+    insert_experiment(experiment)
+    info = query_experiment()
+    print(info)
+    return make_succ_empty_response()

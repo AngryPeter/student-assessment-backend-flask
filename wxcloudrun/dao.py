@@ -3,7 +3,7 @@ import logging
 from sqlalchemy.exc import OperationalError
 
 from wxcloudrun import db
-from wxcloudrun.model import Counters
+from wxcloudrun.model import Counters, Users, Experiment 
 
 # 初始化日志
 logger = logging.getLogger('log')
@@ -62,3 +62,64 @@ def update_counterbyid(counter):
         db.session.commit()
     except OperationalError as e:
         logger.info("update_counterbyid errorMsg= {} ".format(e))
+
+def query_exp_bytime(time):
+    """
+    根据ID查询 Experiment 实体
+    :param id: Experiment 时间段
+    :return: Experiment 实体
+    """
+    try:
+        return Experiment.query.filter(Experiment.time == time).first()
+    except OperationalError as e:
+        logger.info("query_exp_bytime errorMsg= {} ".format(e))
+        return None
+    
+
+def insert_user(user):
+    """
+    插入一个User实体, 同时更新相关Experiment的时段信息
+    :param counter: Counters实体
+    """
+    try:
+        db.session.add(user)
+        Experiment.query.filter(Experiment.time == user.time).update({'left_number': Experiment.left_number - 1})
+        # db.session.flush()
+        db.session.commit()
+    except OperationalError as e:
+        logger.info("insert_user errorMsg= {} ".format(e))
+
+
+def insert_experiment(experiment):
+    """
+    插入一个 Experiment 配置信息
+    :param counter: Counters实体
+    """
+    try:
+        db.session.add(experiment)
+        db.session.commit()
+    except OperationalError as e:
+        logger.info("insert_experiment errorMsg= {} ".format(e))
+
+
+def query_experiment():
+    """
+    查询全部 Experiment 配置信息
+    """
+    try:
+        return db.session.query(Experiment).all()
+    except OperationalError as e:
+        logger.info("query_experiment errorMsg= {} ".format(e))
+        return None
+    
+
+def insert_experiment(experiment):
+    """
+    插入一个 Experiment 实体
+    :param experiment: Experiment实体
+    """
+    try:
+        db.session.add(experiment)
+        db.session.commit()
+    except OperationalError as e:
+        logger.info("insert_experiment errorMsg= {} ".format(e))
