@@ -85,7 +85,8 @@ def user_action():
         user = Users()
         user.username = params['name']
         user.phone = params['phone']
-        user.date = datetime.strptime(params['date'], '%y-%m-%d').date()
+        user.date = datetime.strptime(params['date'], '%Y-%m-%d').date()
+        
         user.time = params['time']
         insert_user(user)
         return make_succ_empty_response()
@@ -93,7 +94,7 @@ def user_action():
         user = Users()
         user.username = params['name']
         user.phone = params['phone']
-        user.date = datetime.strptime(params['date'], '%y-%m-%d').date()
+        user.date = datetime.strptime(params['date'], '%Y-%m-%d').date()
         user.time = params['time']
         update_user(user)
         return make_succ_empty_response()
@@ -112,7 +113,7 @@ def user_action():
         user = Users()
         user.username = params['name']
         user.phone = params['phone']
-        user.date = datetime.strptime(params['date'], '%y-%m-%d').date()
+        user.date = datetime.strptime(params['date'], '%Y-%m-%d').date()
         user.time = params['time']
         delete_user(user)
         return make_succ_empty_response()
