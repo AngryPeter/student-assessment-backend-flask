@@ -131,7 +131,7 @@ def update_user(user):
             Users.query.filter(Users.phone == user.phone and Users.name == user.name and Users.exper_name == user.exper_name).update({'time': user.time, 'date': user.date})
             db.session.flush()
             db.session.commit()
-            return 0
+            return have_user.exper_name
     except OperationalError as e:
         logger.info("update_user errorMsg= {} ".format(e))
 
