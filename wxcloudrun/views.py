@@ -102,7 +102,7 @@ def user_action():
         code = update_user(user)
         if code == -1:
             return make_err_response(user.exper_name)
-        return make_succ_empty_response()
+        return make_err_response(user.exper_name)
     elif params['type'] == 'select':
         user = query_user_byphone(params['phone'])
         if user is None:
