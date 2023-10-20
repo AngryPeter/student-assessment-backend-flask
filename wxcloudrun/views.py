@@ -3,7 +3,7 @@ from flask import render_template, request
 from run import app
 from wxcloudrun.dao import delete_counterbyid, query_counterbyid, insert_counter, update_counterbyid
 from wxcloudrun.dao import query_experiment, insert_user, update_user, query_user_byphone, delete_user
-from wxcloudrun.model import Counters, Experiment, Users
+from wxcloudrun.model import Counters, Users
 from wxcloudrun.response import make_succ_empty_response, make_succ_response, make_err_response, make_nouser_response
 
 
@@ -102,7 +102,7 @@ def user_action():
         code = update_user(user)
         if code == -1:
             return make_err_response(user.exper_name)
-        return make_err_response(code)
+        return make_succ_empty_response()
     elif params['type'] == 'select':
         user = query_user_byphone(params['phone'])
         if user is None:
