@@ -108,7 +108,7 @@ def user_action():
         quser.username = params['name']
         quser.phone = params['phone']
         user_list = query_user_byphone(quser)
-        if user is None:
+        if user_list is None:
             return make_nouser_response()
         else:
             info = []
