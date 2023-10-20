@@ -104,7 +104,10 @@ def user_action():
             return make_err_response(user.exper_name)
         return make_succ_empty_response()
     elif params['type'] == 'select':
-        user = query_user_byphone(params['phone'])
+        quser = Users()
+        quser.username = params['name']
+        quser.phone = params['phone']
+        user = query_user_byphone(quser)
         if user is None:
             return make_nouser_response()
         else:

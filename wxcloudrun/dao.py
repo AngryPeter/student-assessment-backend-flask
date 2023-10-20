@@ -71,20 +71,20 @@ def query_user_in_exper(user):
     :return: User 实体
     """
     try:
-        return Users.query.filter(Users.phone == user.phone, Users.name == user.name, Users.exper_name == user.exper_name).first()
+        return Users.query.filter(Users.phone == user.phone, Users.username == user.username, Users.exper_name == user.exper_name).first()
     except OperationalError as e:
         logger.info("query_user_in_exper errorMsg= {} ".format(e))
         return None
 
 
-def query_user_byphone(phone):
+def query_user_byphone(user):
     """
     根据ID查询 User 实体
     :param id: User 联系方式
     :return: User 实体
     """
     try:
-        return Users.query.filter(Users.phone == phone, Users.name == user.name, ).first()
+        return Users.query.filter(Users.phone == user.phone, Users.username == user.username).first()
     except OperationalError as e:
         logger.info("query_user_byphone errorMsg= {} ".format(e))
         return None
@@ -94,7 +94,7 @@ def insert_user(user):
     插入一个User实体, 同时更新相关Experiment的时段信息
     :param counter: Counters实体
     """
-    have_user = Users.query.filter(Users.phone == user.phone, Users.name == user.name, Users.exper_name == user.exper_name).first()
+    have_user = Users.query.filter(Users.phone == user.phone, Users.username == user.username, Users.exper_name == user.exper_name).first()
     if have_user:
         return -1
     else:
@@ -128,7 +128,7 @@ def update_user(user):
         if have_user is None:
             return -1
         else:
-            Users.query.filter(Users.phone == user.phone, Users.name == user.name, Users.exper_name == user.exper_name).update({'time': user.time, 'date': user.date})
+            Users.query.filter(Users.phone == user.phone, Users.username == user.username, Users.exper_name == user.exper_name).update({'time': user.time, 'date': user.date})
             db.session.flush()
             db.session.commit()
             return 0
