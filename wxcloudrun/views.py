@@ -99,7 +99,9 @@ def user_action():
         user.date = datetime.strptime(params['date'], '%Y-%m-%d').date()
         user.time = params['time']
         user.exper_name = params['exper_name']
-        update_user(user)
+        code = update_user(user)
+        if code == -1:
+            return make_err_response('未查到报名信息')
         return make_succ_empty_response()
     elif params['type'] == 'select':
         user = query_user_byphone(params['phone'])
@@ -118,7 +120,9 @@ def user_action():
         user.username = params['name']
         user.phone = params['phone']
         user.exper_name = params['exper_name']
-        delete_user(user)
+        code = delete_user(user)
+        if code == -1:
+            return make_err_response('未查到报名信息')
         return make_succ_empty_response()
     else:
         return make_err_response('type参数错误')
