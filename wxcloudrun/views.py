@@ -135,15 +135,19 @@ def render_upload():
 
 @app.route('/upload',methods=['POST'])
 def upload_img():
-    folder = os.path.exists('imgs/')
+    basepath = os.path.dirname(__file__)  # 当前文件所在路径
+    upload_path = os.path.join(basepath, 'static\uploads')
+    folder = os.path.exists(upload_path)
     if not folder:                   #判断是否存在文件夹如果不存在则创建为文件夹
-        os.makedirs('imgs/')
+        os.makedirs(upload_path)
     f = request.files['file']
-    f.save(os.path.join('imgs/', secure_filename(f.filename)))
+    f.save(os.path.join(upload_path, secure_filename(f.filename)))
     return make_succ_empty_response()
 
 # 下载当前人员名单
 @app.route('/download', methods=['GET'])
 def download_csv():
-    for filename in os.listdir('imgs/'):
+    basepath = os.path.dirname(__file__)  # 当前文件所在路径
+    upload_path = os.path.join(basepath, 'static\uploads')
+    for filename in os.listdir(upload_path):
         return send_file(filename, as_attachment=True)
