@@ -81,12 +81,17 @@ def insert_user(user):
     插入一个User实体, 同时更新相关Experiment的时段信息
     :param counter: Counters实体
     """
-    try:
-        db.session.add(user)
-        db.session.flush()
-        db.session.commit()
-    except OperationalError as e:
-        logger.info("insert_user errorMsg= {} ".format(e))
+    have_user = Users.query.filter(Users.phone == user.phone and Users.name == user.name and Users.exper_name == user.exper_name).first()
+    if have_user:
+        return -1
+    else:
+        try:
+            db.session.add(user)
+            db.session.flush()
+            db.session.commit()
+            return 0
+        except OperationalError as e:
+            logger.info("insert_user errorMsg= {} ".format(e))
 
 
 def query_experiment():
@@ -110,7 +115,7 @@ def update_user(user):
         if have_user is None:
             return
         else:
-            Users.query.filter(Users.phone == user.phone).update({'time': user.time, 'date': user.date})
+            Users.query.filter(Users.phone == user.phone and Users.name == user.name and Users.exper_name == user.exper_name).update({'time': user.time, 'date': user.date})
             db.session.flush()
             db.session.commit()
     except OperationalError as e:
@@ -127,7 +132,7 @@ def delete_user(user):
         if have_user is None:
             return
         else:
-            db.session.query(Users).filter(Users.phone == user.phone, Users.username == user.username).delete()
+            db.session.query(Users).filter(Users.phone == user.phone, Users.username == user.username and Users.exper_name == user.exper_name).delete()
             db.session.flush()
             db.session.commit()
     except OperationalError as e:

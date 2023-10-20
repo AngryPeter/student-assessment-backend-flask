@@ -117,6 +117,19 @@ curl -X POST -H 'content-type: application/json' -d '{"action": "inc"}' https://
 - MYSQL_USERNAME
 以上三个变量的值请按实际情况填写。如果使用云托管内MySQL，可以在控制台MySQL页面获取相关信息。
 
+## 数据库配置
+
+#### 表结构
+
+- Configuration
+  - start_date: date
+  - end_date: date
+  - time: text
+  - max_num: int
+  - id: id
+
+
+
 
 
 ## License

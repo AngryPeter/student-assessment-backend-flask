@@ -21,8 +21,10 @@ class Users(db.Model):
     __tablename__ = 'Students'
 
     # 设定结构体对应表格的字段
+    id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.Text)
-    phone = db.Column(db.String(255), primary_key=True)
+    exper_name = db.Column(db.Text)
+    phone = db.Column(db.String(255))
     date = db.Column(db.Date)
     time = db.Column(db.Text)
 
@@ -36,5 +38,6 @@ class Experiment(db.Model):
     date = db.Column(db.Date)
     id = db.Column(db.Integer, primary_key=True)
     time = db.Column(db.Text)
+    name = db.Column(db.Text)
     number = db.Column(db.Integer)
     left_number = db.Column(db.Integer)

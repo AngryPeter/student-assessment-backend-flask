@@ -74,7 +74,7 @@ def experiment_info_list():
     final_info = []
     for exp in info:
         if exp.left_number > 0:
-            final_info.append([str(exp.date), exp.time])
+            final_info.append([str(exp.date), exp.time, exp.name])
     return make_succ_response(final_info)
 
 # 管理员后端路由
@@ -87,7 +87,10 @@ def user_action():
         user.phone = params['phone']
         user.date = datetime.strptime(params['date'], '%Y-%m-%d').date()
         user.time = params['time']
-        insert_user(user)
+        user.exper_name = params['exper_name']
+        code = insert_user(user)
+        if code == -1:
+            return make_err_response('已报名实验')
         return make_succ_empty_response()
     elif params['type'] == 'modify':    # 修改报名时间
         user = Users()
@@ -95,6 +98,7 @@ def user_action():
         user.phone = params['phone']
         user.date = datetime.strptime(params['date'], '%Y-%m-%d').date()
         user.time = params['time']
+        user.exper_name = params['exper_name']
         update_user(user)
         return make_succ_empty_response()
     elif params['type'] == 'select':
@@ -107,11 +111,13 @@ def user_action():
             info.append(user.phone)
             info.append(str(user.date))
             info.append(user.time)
+            info.append(user.exper_name)
             return make_succ_response(info)
     elif params['type'] == 'delete':
         user = Users()
         user.username = params['name']
         user.phone = params['phone']
+        user.exper_name = params['exper_name']
         delete_user(user)
         return make_succ_empty_response()
     else:
