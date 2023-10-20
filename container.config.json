@@ -21,6 +21,9 @@
 		}
 	],
 	"envParams": {
+		"MYSQL_ADDRESS": "10.22.104.4:3306",
+		"MYSQL_PASSWORD": "LIning@sem",
+		"MYSQL_USERNAME": "root"
 	},         
 	"customLogs": "stdout",              
 	"initialDelaySeconds": 2,                  
