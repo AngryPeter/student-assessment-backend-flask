@@ -135,6 +135,9 @@ def render_upload():
 
 @app.route('/upload',methods=['POST'])
 def upload_img():
+    folder = os.path.exists('imgs/')
+    if not folder:                   #判断是否存在文件夹如果不存在则创建为文件夹
+        os.makedirs('imgs/')
     f = request.files['file']
     f.save(os.path.join('imgs/', secure_filename(f.filename)))
     return make_succ_empty_response()
