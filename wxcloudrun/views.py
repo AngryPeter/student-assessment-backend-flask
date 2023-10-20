@@ -72,10 +72,13 @@ def get_count():
 def experiment_info_list():
     info = query_experiment()
     final_info = []
+    all_exper_list = []
     for exp in info:
+        if exp.name not in all_exper_list:
+            all_exper_list.append(exp.name)
         if exp.left_number > 0:
             final_info.append([str(exp.date), exp.time, exp.name])
-    return make_succ_response(final_info)
+    return make_succ_response([final_info, all_exper_list])
 
 # 管理员后端路由
 @app.route('/user', methods=['POST'])
