@@ -107,16 +107,13 @@ def user_action():
         quser = Users()
         quser.username = params['name']
         quser.phone = params['phone']
-        user = query_user_byphone(quser)
+        user_list = query_user_byphone(quser)
         if user is None:
             return make_nouser_response()
         else:
             info = []
-            info.append(user.username)
-            info.append(user.phone)
-            info.append(str(user.date))
-            info.append(user.time)
-            info.append(user.exper_name)
+            for user in user_list:
+                info.append([user.username, user.phone, str(user.date), user.time, user.exper_name])
             return make_succ_response(info)
     elif params['type'] == 'delete':
         user = Users()
