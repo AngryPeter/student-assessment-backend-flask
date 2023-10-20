@@ -84,7 +84,7 @@ def query_user_byphone(user):
     :return: User 实体
     """
     try:
-        return Users.query.filter(Users.phone == user.phone, Users.username == user.username).first()
+        return Users.query.filter(Users.phone == user.phone, Users.username == user.username).all()
     except OperationalError as e:
         logger.info("query_user_byphone errorMsg= {} ".format(e))
         return None
