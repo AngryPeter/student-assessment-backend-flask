@@ -71,11 +71,11 @@ def get_count():
 @app.route('/user', methods=['GET'])
 def experiment_info_list():
     info = query_experiment()
-    # final_info = []
-    # for exp in info:
-    #     if exp.left_number > 0:
-    #         final_info.append([str(exp.date), exp.time, exp.name])
-    return make_succ_response(str(info))
+    final_info = []
+    for exp in info:
+        if exp.left_number > 0:
+            final_info.append([str(exp.date), exp.time, exp.name])
+    return make_succ_response(final_info)
 
 # 管理员后端路由
 @app.route('/user', methods=['POST'])
