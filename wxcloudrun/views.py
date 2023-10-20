@@ -1,12 +1,11 @@
 from datetime import datetime
-from flask import render_template, request, send_file
+from flask import render_template, request
 from run import app
 from wxcloudrun.dao import delete_counterbyid, query_counterbyid, insert_counter, update_counterbyid
 from wxcloudrun.dao import query_experiment, insert_user, update_user, query_user_byphone, delete_user
 from wxcloudrun.model import Counters, Users
 from wxcloudrun.response import make_succ_empty_response, make_succ_response, make_err_response, make_nouser_response
-import os
-from werkzeug.utils import secure_filename
+
 
 @app.route('/')
 def index():
@@ -127,27 +126,3 @@ def user_action():
         return make_succ_empty_response()
     else:
         return make_err_response('type参数错误')
-    
-
-@app.route('/upload',methods=['GET'])
-def render_upload():
-    return render_template('upload.html')
-
-@app.route('/upload',methods=['POST'])
-def upload_img():
-    basepath = os.path.dirname(__file__)  # 当前文件所在路径
-    upload_path = os.path.join(basepath, 'static\uploads')
-    folder = os.path.exists(upload_path)
-    if not folder:                   #判断是否存在文件夹如果不存在则创建为文件夹
-        os.makedirs(upload_path)
-    f = request.files['file']
-    f.save(os.path.join(upload_path, secure_filename(f.filename)))
-    return make_succ_empty_response()
-
-# 下载当前人员名单
-@app.route('/download', methods=['GET'])
-def download_csv():
-    basepath = os.path.dirname(__file__)  # 当前文件所在路径
-    upload_path = os.path.join(basepath, 'static\uploads')
-    for filename in os.listdir(upload_path):
-        return send_file(filename, as_attachment=True)
