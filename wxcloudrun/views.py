@@ -101,7 +101,7 @@ def user_action():
         user.exper_name = params['exper_name']
         code = update_user(user)
         if code == -1:
-            return make_err_response('未查到报名信息')
+            return make_err_response(user.exper_name)
         return make_succ_empty_response()
     elif params['type'] == 'select':
         user = query_user_byphone(params['phone'])
