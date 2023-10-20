@@ -63,10 +63,24 @@ def update_counterbyid(counter):
     except OperationalError as e:
         logger.info("update_counterbyid errorMsg= {} ".format(e))
 
+
+def query_user_in_exper(user):
+    """
+    根据姓名、手机号、实验信息查询 User 实体
+    :param id: User 实体
+    :return: User 实体
+    """
+    try:
+        return Users.query.filter(Users.phone == user.phone and Users.name == user.name and Users.exper_name == user.exper_name).first()
+    except OperationalError as e:
+        logger.info("query_user_in_exper errorMsg= {} ".format(e))
+        return None
+
+
 def query_user_byphone(phone):
     """
     根据ID查询 User 实体
-    :param id: User 时间段
+    :param id: User 联系方式
     :return: User 实体
     """
     try:
@@ -74,7 +88,6 @@ def query_user_byphone(phone):
     except OperationalError as e:
         logger.info("query_user_byphone errorMsg= {} ".format(e))
         return None
-    
 
 def insert_user(user):
     """
@@ -111,13 +124,14 @@ def update_user(user):
     :param user 实体
     """
     try:
-        have_user = query_user_byphone(user.phone)
+        have_user = query_user_in_exper(user)
         if have_user is None:
-            return
+            return -1
         else:
             Users.query.filter(Users.phone == user.phone and Users.name == user.name and Users.exper_name == user.exper_name).update({'time': user.time, 'date': user.date})
             db.session.flush()
             db.session.commit()
+            return 0
     except OperationalError as e:
         logger.info("update_user errorMsg= {} ".format(e))
 
@@ -128,12 +142,13 @@ def delete_user(user):
     :param id: phone
     """
     try:
-        have_user = query_user_byphone(user.phone)
+        have_user = query_user_in_exper(user)
         if have_user is None:
-            return
+            return -1
         else:
             db.session.query(Users).filter(Users.phone == user.phone, Users.username == user.username and Users.exper_name == user.exper_name).delete()
             db.session.flush()
             db.session.commit()
+            return 0
     except OperationalError as e:
         logger.info("delete_user errorMsg= {} ".format(e))
