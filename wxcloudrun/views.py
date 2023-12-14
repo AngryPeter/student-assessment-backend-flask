@@ -6,6 +6,7 @@ from wxcloudrun.dao import query_experiment, insert_user, update_user, query_use
 from wxcloudrun.model import Counters, Users
 from wxcloudrun.response import make_succ_empty_response, make_succ_response, make_err_response, make_nouser_response
 import requests
+import json
 
 
 @app.route('/')
@@ -144,12 +145,12 @@ def get_phone_number():
     }, headers={
         'Content-Type': 'application/json'
     })
-    data = response.json()['data_list'][0]
+    # data = response.json()['data_list'][0]
     try:
-        # data = response.json()['data_list'][0] # 从回包中获取手机号信息
-        phone = data['json']['data']['phoneNumber']
+        data = response.json()['data_list'][0] # 从回包中获取手机号信息
+        phone = json.loads(data['json'])['data']['phoneNumber']
         # 将手机号发送回客户端，此处仅供示例
         # 实际场景中应对手机号进行打码处理，或仅在后端保存使用
         return make_succ_response(phone)
     except Exception as e:
-        return make_succ_response([data, api, params['cloudid']])
+        return make_succ_response("fail")
