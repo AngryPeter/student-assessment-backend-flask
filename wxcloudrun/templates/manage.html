@@ -235,25 +235,35 @@
       <a class="btn btn-success btn-lg count-button" style="background: #07c160; border: 0"
         onclick="set('inc')">计数+1</a>
     </div> -->
-    <div class="form-group">
+    <form id="myForm">
+        <label for="experiment-name" >实验名称</label>
+        <input type="text" id="input1" name="input1" class="select-text"><br><br>
+      
+        <label for="experiment-date">实验日期</label>
+        <input type="text" id="input2" name="input2" class="select-text"><br><br>
+      
+        <label for="experiment-time">实验时间</label>
+        <input type="text" id="input3" name="input3" class="select-text"><br><br>
+      
+        <input type="submit" class="btn btn-primary" value="提交" onclick="submit()"></button>
+    </form>
+      
+    <!-- <div class="form-group">
         <label for="experiment-name" class="select-text">实验名称</label>
         <select class="form-control" id="experiment-name">
-          <!-- 这里通过/search GET方法获取备选项并展示 -->
         </select>
     </div>
     <div class="form-group">
         <label for="experiment-date" class="select-text">实验日期</label>
         <select class="form-control" id="experiment-date">
-            <!-- 这里通过/search GET方法获取备选项并展示 -->
         </select>
     </div>
     <div class="form-group">
         <label for="experiment-time" class="select-text">实验时间</label>
         <select class="form-control" id="experiment-time">
-            <!-- 这里通过/search GET方法获取备选项并展示 -->
         </select>
-    </div>
-    <label class="select-text"></label>
+    </div> -->
+    <!-- <label class="select-text"></label> -->
     <!-- <button type="submit" class="btn btn-primary">确认选择</button> -->
   </div>
 </body>
@@ -263,21 +273,40 @@
 <script>
   init();
   function init() {
-    $.ajax("/search", {
-      method: "get",
-    }).done(function (res) {
-      if (res && res.data !== undefined) {
-        var nameList = res.data.nameList; // 假设服务器返回的时间列表数据在data对象的timeList属性中
-        var selectElement = $('#experiment-name'); // 获取需要展示时间列表的<select>元素
-        // 遍历时间列表并将其添加到<select>元素中
-        for (var i = 0; i < nameList.length; i++) {
-            var option = $('<option>').text(nameList[i]);
-            selectElement.append(option);
+    // $.ajax("/search", {
+    //   method: "get",
+    // }).done(function (res) {
+    //   if (res && res.data !== undefined) {
+    //     var nameList = res.data.nameList; // 假设服务器返回的时间列表数据在data对象的timeList属性中
+    //     var selectElement = $('#experiment-name'); // 获取需要展示时间列表的<select>元素
+    //     // 遍历时间列表并将其添加到<select>元素中
+    //     for (var i = 0; i < nameList.length; i++) {
+    //         var option = $('<option>').text(nameList[i]);
+    //         selectElement.append(option);
+    //     }
+    //     selectElement.trigger('change'); // 触发change事件
+    //   }
+    // });
+  }
+  function login() {
+    $.ajax({
+        type: "POST",                  
+        dataType: "json",              
+        url: "/search" ,          
+        data: $('#myForm').serialize(), //提交的数据
+        success: function (result) {
+            console.log(result);       //打印服务端返回的数据(调试用)
+            if (result.resultCode == 200) {
+                alert("提交成功");
+            }
+            ;
+        },
+        error : function() {
+            alert("提交失败");
         }
-        selectElement.trigger('change'); // 触发change事件
-      }
     });
   }
+
   function set(action) {
     $.ajax("/api/count", {
       method: "POST",

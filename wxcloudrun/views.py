@@ -7,7 +7,7 @@ from wxcloudrun.model import Counters, Users
 from wxcloudrun.response import make_succ_empty_response, make_succ_response, make_err_response, make_nouser_response
 import requests
 import json
-
+# https://juejin.cn/post/7033614049862483975
 
 @app.route('/')
 def index():
@@ -156,14 +156,15 @@ def get_phone_number():
         return make_err_response("fail")
     
 
-@app.route('/search', methods=['GET'])
+@app.route('/search', methods=['POST'])
 def get_exper_info():
     """
     :return: 实验名字
     """
-    expers = query_experiment()
-    nameList = []
-    for exper in expers:
-        if exper.name not in nameList:
-            nameList.append(exper.name)
-    return make_succ_response(nameList)
+    return make_succ_empty_response()
+    # expers = query_experiment()
+    # nameList = []
+    # for exper in expers:
+    #     if exper.name not in nameList:
+    #         nameList.append(exper.name)
+    # return make_succ_response(nameList)
