@@ -5,6 +5,7 @@ from wxcloudrun.dao import delete_counterbyid, query_counterbyid, insert_counter
 from wxcloudrun.dao import query_experiment, insert_user, update_user, query_user_byphone, delete_user
 from wxcloudrun.model import Counters, Users
 from wxcloudrun.response import make_succ_empty_response, make_succ_response, make_err_response, make_nouser_response
+import requests
 
 
 @app.route('/')
@@ -134,7 +135,21 @@ def user_action():
 # 手机号获取路由
 @app.route('/phone', methods=['POST'])
 def get_phone_number():
-    print(request)
     params = request.get_json()
-    print(params)
-    return make_succ_empty_response()
+    # response = requests.get("http://api.weixin.qq.com/wxa/getwxadevinfo")
+    # 拼接 Header 中的 x-wx-openid 到接口中
+    api = f"http://api.weixin.qq.com/wxa/getopendata?openid={request.headers['x-wx-openid']}"
+    response = requests.post(api, json={
+        "cloudid_list": [params['cloudid']] # 传入需要换取的 CloudID
+    }, headers={
+        'Content-Type': 'application/json'
+    })
+    
+    try:
+        data = response.json()['data_list'][0] # 从回包中获取手机号信息
+        phone = data['json']['data']['phoneNumber']
+        # 将手机号发送回客户端，此处仅供示例
+        # 实际场景中应对手机号进行打码处理，或仅在后端保存使用
+        return make_succ_response(phone)
+    except Exception as e:
+        return make_succ_empty_response("Fail")
