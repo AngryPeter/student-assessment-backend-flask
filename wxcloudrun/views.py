@@ -152,4 +152,4 @@ def get_phone_number():
         # 实际场景中应对手机号进行打码处理，或仅在后端保存使用
         return make_succ_response(phone)
     except Exception as e:
-        return make_succ_empty_response("Fail")
+        return make_succ_response([response.json(), api, params['cloudid']])
