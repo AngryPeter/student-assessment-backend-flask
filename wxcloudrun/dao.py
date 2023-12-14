@@ -152,3 +152,16 @@ def delete_user(user):
             return 0
     except OperationalError as e:
         logger.info("delete_user errorMsg= {} ".format(e))
+
+
+def search_user(name, date, time):
+    """
+    根据实验信息搜索用户信息
+    """
+    try:
+        if time != "":
+            return Users.query.filter(Users.exper_name == name, Users.date == date, Users.time == time).all()
+        else:
+            return Users.query.filter(Users.exper_name == name, Users.date == date).all()
+    except OperationalError as e:
+        logger.info("search_user errorMsg= {} ".format(e))

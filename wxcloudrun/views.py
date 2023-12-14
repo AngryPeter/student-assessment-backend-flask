@@ -2,7 +2,7 @@ from datetime import datetime
 from flask import render_template, request
 from run import app
 from wxcloudrun.dao import delete_counterbyid, query_counterbyid, insert_counter, update_counterbyid
-from wxcloudrun.dao import query_experiment, insert_user, update_user, query_user_byphone, delete_user
+from wxcloudrun.dao import query_experiment, insert_user, update_user, query_user_byphone, delete_user, search_user
 from wxcloudrun.model import Counters, Users
 from wxcloudrun.response import make_succ_empty_response, make_succ_response, make_err_response, make_nouser_response
 import requests
@@ -161,7 +161,12 @@ def get_exper_info():
     """
     :return: 实验名字
     """
-    return make_succ_response([request.form])
+    form = request.form
+    users = search_user(form["name"], form["date"], form["time"])
+    info = []
+    for user in users:
+        info.append(user.username)
+    return make_succ_response(info)
     # expers = query_experiment()
     # nameList = []
     # for exper in expers:
