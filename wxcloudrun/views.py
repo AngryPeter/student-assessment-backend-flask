@@ -129,3 +129,12 @@ def user_action():
         return make_succ_empty_response()
     else:
         return make_err_response('type参数错误')
+    
+
+# 手机号获取路由
+@app.route('/phone', methods=['POST'])
+def get_phone_number():
+    print(request)
+    params = request.get_json()
+    print(params)
+    return make_succ_empty_response()
