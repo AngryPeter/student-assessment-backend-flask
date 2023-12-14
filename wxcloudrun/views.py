@@ -161,7 +161,7 @@ def get_exper_info():
     """
     :return: 实验名字
     """
-    return make_succ_empty_response([request.get_json()])
+    return make_succ_response([request.get_json()])
     # expers = query_experiment()
     # nameList = []
     # for exper in expers:
