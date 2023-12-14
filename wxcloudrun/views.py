@@ -164,5 +164,6 @@ def get_exper_info():
     expers = query_experiment()
     nameList = []
     for exper in expers:
-        nameList.append(exper.name)
+        if exper.name not in nameList:
+            nameList.append(exper.name)
     return make_succ_response(nameList)

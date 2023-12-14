@@ -271,9 +271,10 @@
         var selectElement = $('#experiment-name'); // 获取需要展示时间列表的<select>元素
         // 遍历时间列表并将其添加到<select>元素中
         for (var i = 0; i < nameList.length; i++) {
-        var option = $('<option>').text(nameList[i]);
+            var option = $('<option>').text(nameList[i]);
             selectElement.append(option);
         }
+        selectElement.trigger('change'); // 触发change事件
       }
     });
   }
