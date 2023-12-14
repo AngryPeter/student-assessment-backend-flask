@@ -14,7 +14,7 @@ def index():
     """
     :return: 返回index页面
     """
-    return render_template('index.html')
+    return render_template('manage.html')
 
 
 @app.route('/api/count', methods=['POST'])
@@ -153,4 +153,16 @@ def get_phone_number():
         # 实际场景中应对手机号进行打码处理，或仅在后端保存使用
         return make_succ_response(phone)
     except Exception as e:
-        return make_succ_response("fail")
+        return make_err_response("fail")
+    
+
+@app.route('/search', methods=['GET'])
+def get_exper_info():
+    """
+    :return: 实验名字
+    """
+    expers = query_experiment()
+    nameList = []
+    for exper in expers:
+        nameList.append(exper.name)
+    return make_succ_response(nameList)
