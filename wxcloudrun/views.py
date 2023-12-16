@@ -7,6 +7,8 @@ from wxcloudrun.model import Counters, Users
 from wxcloudrun.response import make_succ_empty_response, make_succ_response, make_err_response, make_nouser_response
 import requests
 import json
+from qcloudsms_py import SmsMultiSender, SmsSingleSender
+from qcloudsms_py.httpclient import HTTPError
 # https://juejin.cn/post/7033614049862483975
 
 @app.route('/')
@@ -14,7 +16,7 @@ def index():
     """
     :return: 返回index页面
     """
-    return render_template('manage.html')
+    return render_template('manage.html', have_user=False)
 
 
 @app.route('/api/count', methods=['POST'])
@@ -163,10 +165,23 @@ def get_exper_info():
     """
     form = request.form
     users = search_user(form["name"], form["date"], form["time"])
-    info = []
+    appid = "1400876767"  # 自己应用ID
+    appkey = "32a0a7549fbf3db5ad50dfaaa9ba2ca3"  # 自己应用Key
+    sms_sign = "未来科技与组织行为公众号" # 自己腾讯云创建签名时填写的签名内容（使用公众号的话这个值一般是公众号全称或简称）
+    # sender = SmsSingleSender(appid, appkey)
+    template_id = "2021233"
+    sender = SmsSingleSender(appid, appkey)
+    usernames = []
     for user in users:
-        info.append(user.username)
-    return make_succ_response(info)
+        # {1}同学您好！您已成功报名我们的实验：{2}，请在 {3} 来 {4} 参加实验。感谢您的参与，祝好！
+        usernames.append(user.username)
+        param_list = [user.username, user.exper_name, user.date + " " + user.time, "北京市海淀区世纪科贸大厦C座16楼1604（近清华大学东南门）"]
+        try:
+            response = sender.send_with_param(86, user.phone, template_id, param_list, sign=sms_sign)
+        except HTTPError as e:
+            response = {'result': 1000, 'errmsg': "网络异常发送失败"}
+            return make_err_response("网络异常发送失败")
+    return make_succ_response(usernames)
     # expers = query_experiment()
     # nameList = []
     # for exper in expers:
