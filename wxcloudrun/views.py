@@ -169,13 +169,13 @@ def get_exper_info():
     appkey = "32a0a7549fbf3db5ad50dfaaa9ba2ca3"  # 自己应用Key
     sms_sign = "未来科技与组织行为公众号" # 自己腾讯云创建签名时填写的签名内容（使用公众号的话这个值一般是公众号全称或简称）
     # sender = SmsSingleSender(appid, appkey)
-    template_id = "2021233"
+    template_id = "2021626"
     sender = SmsSingleSender(appid, appkey)
     usernames = []
     for user in users:
-        # {1}同学您好！您已成功报名我们的实验：{2}，请在 {3} 来 {4} 参加实验。感谢您的参与，祝好！
+        # {1} 同学您好！ 您已成功报名我们的实验：{2}，请在 {3} 的 {4} 前往世纪科贸大厦C座1604（近清华大学东南门）线下参加实验。感谢您的参与，祝好！
         usernames.append(user.username)
-        param_list = [user.username, user.exper_name, user.time, "世纪科贸大厦C座"]
+        param_list = [user.username, user.exper_name, str(user.date), user.time]
         try:
             response = sender.send_with_param(86, user.phone, template_id, param_list, sign=sms_sign)
         except HTTPError as e:
