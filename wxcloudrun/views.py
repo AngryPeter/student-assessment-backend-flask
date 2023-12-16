@@ -175,7 +175,7 @@ def get_exper_info():
     for user in users:
         # {1}同学您好！您已成功报名我们的实验：{2}，请在 {3} 来 {4} 参加实验。感谢您的参与，祝好！
         usernames.append(user.username)
-        param_list = [user.username, user.exper_name, user.date + " " + user.time, "北京市海淀区世纪科贸大厦C座16楼1604（近清华大学东南门）"]
+        param_list = [user.username, user.exper_name, str(user.date) + " " + user.time, "北京市海淀区世纪科贸大厦C座16楼1604（近清华大学东南门）"]
         try:
             response = sender.send_with_param(86, user.phone, template_id, param_list, sign=sms_sign)
         except HTTPError as e:
