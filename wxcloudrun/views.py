@@ -181,7 +181,7 @@ def get_exper_info():
         except HTTPError as e:
             response = {'result': 1000, 'errmsg': "网络异常发送失败"}
             return make_err_response("网络异常发送失败")
-    return make_succ_response(usernames)
+    return render_template('users.html', users=usernames)
     # expers = query_experiment()
     # nameList = []
     # for exper in expers:
